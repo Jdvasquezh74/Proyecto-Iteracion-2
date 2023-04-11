@@ -1,0 +1,9 @@
+{
+	"title": "Nombres de las tablas de AlohAndes Uniandes para la aplicación A",
+	"unidadPersistencia": "AlohAndes",
+	"tablas":
+	[
+		"AlohAndes_sequence",
+		"A_USUARIO"
+	]
+}
