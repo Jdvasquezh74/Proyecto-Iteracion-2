@@ -142,7 +142,7 @@ public class TipoBebidaTest
 		}
 		finally
 		{
-			parranderos.limpiarParranderos ();
+			parranderos.limpiarAlohAndes ();
     		parranderos.cerrarUnidadPersistencia ();    		
 		}
 	}
@@ -198,7 +198,7 @@ public class TipoBebidaTest
 		}    				
 		finally
 		{
-			parranderos.limpiarParranderos ();
+			parranderos.limpiarAlohAndes ();
     		parranderos.cerrarUnidadPersistencia ();    		
 		}
 	}

@@ -1,28 +1,28 @@
 {
-	"title": "Aplicación transaccional de Parranderos Uniandes",
+	"title": "Aplicación transaccional de AlohAndes Uniandes",
 	"frameH": 600,
 	"frameW": 800,
 	"bannerPath": "./src/main/resources/config/logo.png",
 	"menuBar":
 	[
-		{ "menuTitle": "TipoBebida",
+		{ "menuTitle": "Usuario",
 		  "options":
 			[
 				{
 					"label": "Adicionar",
-					"event": "adicionarTipoBebida"
+					"event": "adicionarUsuario"
 				},
 				{
 					"label": "Listar",
-					"event": "listarTipoBebida"
+					"event": "listarUsuario"
 				},
 				{
 					"label": "Borrar por Id",
-					"event": "eliminarTipoBebidaPorId"
+					"event": "eliminarUsuarioPorId"
 				},
 				{
-					"label": "Buscar por Nombre",
-					"event": "buscarTipoBebidaPorNombre"
+					"label": "Buscar por Identificacion",
+					"event": "buscarUsuarioPorIdentificacion"
 				}
 			]
 		},
@@ -30,7 +30,7 @@
 		  "options":
 			[
 				{
-					"label": "Mostrar log Parranderos",
+					"label": "Mostrar log AlohAndes",
 					"event": "mostrarLogParranderos"
 				},
 				{
@@ -38,7 +38,7 @@
 					"event": "mostrarLogDatanuecleus"
 				},
 				{
-					"label": "Limpiar log de parranderos",
+					"label": "Limpiar log de AlohAndes",
 					"event": "limpiarLogParranderos"
 				},
 				{

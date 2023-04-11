@@ -237,32 +237,89 @@ public class InterfazParranderosApp extends JFrame implements ActionListener
     }
     
 	/* ****************************************************************
-	 * 			CRUD de TipoBebida
+	 * 			CRUD de Usuario
 	 *****************************************************************/
     /**
-     * Adiciona un tipo de bebida con la información dada por el usuario
-     * Se crea una nueva tupla de tipoBebida en la base de datos, si un tipo de bebida con ese nombre no existía
+     * Adiciona un usuario con la información dada por el usuario
+     * Se crea una nueva tupla de usuario en la base de datos, si un usuario con el mismo documento no existía previamente
      */
-    public void adicionarTipoBebida( )
+    public void adicionarUsuario( )
     {
     	try 
     	{
     		String tipoUsuario = JOptionPane.showInputDialog (this, "El usuario es de tipo jurídico (escriba 'Sí' para adicionar un usuario de este tipo) ?", "Adicionar usuario", JOptionPane.QUESTION_MESSAGE);
+    		String nitUsuario = null;
+    		String ubicacion = null;
+    		String tipoJuridico = null;
+    		String numeroDocumento = null;
+    		String tipoDocumento = null;
     		
     		if (tipoUsuario.equals("Sí")) {
-        		String nitUsuario = JOptionPane.showInputDialog (this, "NIT del usario?", "Adicionar usuario", JOptionPane.QUESTION_MESSAGE);
-    			
-    		}
-    		String nombreUsuario = JOptionPane.showInputDialog (this, "Nombre del tipo de bedida?", "Adicionar tipo de bebida", JOptionPane.QUESTION_MESSAGE);
-    		if (nombreTipo != null)
-    		{
-        		VOUsuario tb = alohAndes.adicionarUsuario (nombreTipo);
-        		if (tb == null)
-        		{
-        			throw new Exception ("No se pudo crear un tipo de bebida con nombre: " + nombreTipo);
+        		nitUsuario = JOptionPane.showInputDialog (this, "NIT del usario?", "Adicionar usuario", JOptionPane.QUESTION_MESSAGE);
+        		ubicacion = JOptionPane.showInputDialog (this, "Ubicacion física del usario?", "Adicionar usuario", JOptionPane.QUESTION_MESSAGE);
+        		tipoJuridico = JOptionPane.showInputDialog (this, "Tipo jurídico del usario (1-Hotel, 2-Hostal, cualquier otro valor-Vivienda Universitaria)?", "Adicionar usuario", JOptionPane.QUESTION_MESSAGE);
+        		if (tipoJuridico.equals("1")) {
+        			tipoJuridico = "Hotel";
         		}
-        		String resultado = "En adicionarTipoBebida\n\n";
-        		resultado += "Tipo de bebida adicionado exitosamente: " + tb;
+        		else if (tipoJuridico.equals("2")) {
+        			tipoJuridico = "Hostal";
+        		}
+        		else {
+        			tipoJuridico = "Vivienda Universitaria";
+        		}
+    		}
+    		else {
+    			numeroDocumento = JOptionPane.showInputDialog (this, "Número de documento del usuario natural?", "Adicionar usuario", JOptionPane.QUESTION_MESSAGE);
+        		tipoDocumento = JOptionPane.showInputDialog (this, "Tipo de documento del usuario natural (1-CC, 2-TI, cualquier otro valor-CE)?", "Adicionar usuario", JOptionPane.QUESTION_MESSAGE);
+        		if (tipoDocumento.equals("1")) {
+        			tipoDocumento = "CC";
+        		}
+        		else if (tipoDocumento.equals("2")) {
+        			tipoDocumento = "TI";
+        		}
+        		else {
+        			tipoDocumento = "CE";
+        		}
+    		}
+    		String relacionComunidad = JOptionPane.showInputDialog (this, "Indique la relación del usuario con la comunidad\n(1-Estudiante, 2-Egresado, 3-Profesor, cualquier otro valor-Convenio\n(si no pertenece a la comunidad, no puede hacer uso de la aplicación)?", "Adicionar usuario", JOptionPane.QUESTION_MESSAGE);
+    		if (relacionComunidad.equals("1")) {
+    			relacionComunidad = "Estudiante";
+    		}
+    		else if (relacionComunidad.equals("2")) {
+    			relacionComunidad = "Egresado";
+    		}
+    		else if (relacionComunidad.equals("3")) {
+    			relacionComunidad = "Profesor";
+    		}
+    		else {
+    			relacionComunidad = "Convenio";
+    		}
+    		if (tipoUsuario.equals("Sí") && nitUsuario != null && ubicacion != null && tipoJuridico != null && relacionComunidad != null)
+    		{
+    			int numeroDoc = 0;
+        		VOUsuario us = alohAndes.adicionarUsuario(nitUsuario, ubicacion,
+    					tipoJuridico, numeroDoc, tipoDocumento,
+    					relacionComunidad) ;;
+        		if (us == null)
+        		{
+        			throw new Exception ("No se pudo crear un usuario con identificacion: " + nitUsuario);
+        		}
+        		String resultado = "En adicionarUsuario\n\n";
+        		resultado += "Usuario adicionado exitosamente: " + us;
+    			resultado += "\n Operación terminada";
+    			panelDatos.actualizarInterfaz(resultado);
+    		}
+    		else if (!(tipoUsuario.equals("Sí")) && numeroDocumento != null && tipoDocumento != null && relacionComunidad != null)
+    		{
+        		VOUsuario us = alohAndes.adicionarUsuario(nitUsuario, ubicacion,
+    					tipoJuridico, Integer.parseInt(numeroDocumento), tipoDocumento,
+    					relacionComunidad) ;;
+        		if (us == null)
+        		{
+        			throw new Exception ("No se pudo crear un usuario con identificacion: " + numeroDocumento);
+        		}
+        		String resultado = "En adicionarUsuario\n\n";
+        		resultado += "Usuario adicionado exitosamente: " + us;
     			resultado += "\n Operación terminada";
     			panelDatos.actualizarInterfaz(resultado);
     		}
@@ -280,16 +337,16 @@ public class InterfazParranderosApp extends JFrame implements ActionListener
     }
 
     /**
-     * Consulta en la base de datos los tipos de bebida existentes y los muestra en el panel de datos de la aplicación
+     * Consulta en la base de datos los usuarios existentes y los muestra en el panel de datos de la aplicación
      */
-    public void listarTipoBebida( )
+    public void listarUsuario( )
     {
     	try 
     	{
 			List <VOUsuario> lista = alohAndes.darVOUsuarios();
 
-			String resultado = "En listarTipoBebida";
-			resultado +=  "\n" + listarTiposBebida (lista);
+			String resultado = "En listarUsuario";
+			resultado +=  "\n" + listarUsuarios (lista);
 			panelDatos.actualizarInterfaz(resultado);
 			resultado += "\n Operación terminada";
 		} 
@@ -302,21 +359,21 @@ public class InterfazParranderosApp extends JFrame implements ActionListener
     }
 
     /**
-     * Borra de la base de datos el tipo de bebida con el identificador dado po el usuario
-     * Cuando dicho tipo de bebida no existe, se indica que se borraron 0 registros de la base de datos
+     * Borra de la base de datos el usuario con el identificador dado por el usuario
+     * Cuando dicho usuario no existe, se indica que se borraron 0 registros de la base de datos
      */
-    public void eliminarTipoBebidaPorId( )
+    public void eliminarUsuarioPorId( )
     {
     	try 
     	{
-    		String idTipoStr = JOptionPane.showInputDialog (this, "Id del tipo de bedida?", "Borrar tipo de bebida por Id", JOptionPane.QUESTION_MESSAGE);
-    		if (idTipoStr != null)
+    		String idUsuarioStr = JOptionPane.showInputDialog (this, "Id del usuario?", "Borrar usuario por Id", JOptionPane.QUESTION_MESSAGE);
+    		if (idUsuarioStr != null)
     		{
-    			long idTipo = Long.valueOf (idTipoStr);
-    			long tbEliminados = alohAndes.eliminarTipoBebidaPorId (idTipo);
+    			long idUsuario = Long.valueOf (idUsuarioStr);
+    			long usEliminados = alohAndes.eliminarUsuarioPorId (idUsuario);
 
-    			String resultado = "En eliminar TipoBebida\n\n";
-    			resultado += tbEliminados + " Tipos de bebida eliminados\n";
+    			String resultado = "En eliminar Usuario\n\n";
+    			resultado += usEliminados + " Usuarios eliminados\n";
     			resultado += "\n Operación terminada";
     			panelDatos.actualizarInterfaz(resultado);
     		}
@@ -334,24 +391,24 @@ public class InterfazParranderosApp extends JFrame implements ActionListener
     }
 
     /**
-     * Busca el tipo de bebida con el nombre indicado por el usuario y lo muestra en el panel de datos
+     * Busca el usuario con el nombre indicado por el usuario y lo muestra en el panel de datos
      */
-    public void buscarTipoBebidaPorNombre( )
+    public void buscarUsuarioPorIdentificacion( )
     {
     	try 
     	{
-    		String nombreTb = JOptionPane.showInputDialog (this, "Nombre del tipo de bedida?", "Buscar tipo de bebida por nombre", JOptionPane.QUESTION_MESSAGE);
-    		if (nombreTb != null)
+    		String identificacionUs = JOptionPane.showInputDialog (this, "Identificacion del usuario?", "Buscar usuario por identificacion", JOptionPane.QUESTION_MESSAGE);
+    		if (identificacionUs != null)
     		{
-    			VOUsuario tipoBebida = alohAndes.darUsuarioPorIdentificacion (nombreTb);
-    			String resultado = "En buscar Tipo Bebida por nombre\n\n";
-    			if (tipoBebida != null)
+    			VOUsuario usuario = alohAndes.darUsuarioPorIdentificacion (identificacionUs);
+    			String resultado = "En buscar Usuaro por nombre\n\n";
+    			if (usuario != null)
     			{
-        			resultado += "El tipo de bebida es: " + tipoBebida;
+        			resultado += "El usuario es: " + usuario;
     			}
     			else
     			{
-        			resultado += "Un tipo de bebida con nombre: " + nombreTb + " NO EXISTE\n";    				
+        			resultado += "Un usuario con identificacion: " + identificacionUs + " NO EXISTE\n";    				
     			}
     			resultado += "\n Operación terminada";
     			panelDatos.actualizarInterfaz(resultado);
@@ -432,7 +489,7 @@ public class InterfazParranderosApp extends JFrame implements ActionListener
 		try 
 		{
     		// Ejecución de la demo y recolección de los resultados
-			long eliminados [] = AlohAndes.limpiarAlohAndes();
+			long eliminados [] = alohAndes.limpiarAlohAndes();
 			
 			// Generación de la cadena de caracteres con la traza de la ejecución de la demo
 			String resultado = "\n\n************ Limpiando la base de datos ************ \n";
@@ -528,13 +585,13 @@ public class InterfazParranderosApp extends JFrame implements ActionListener
      * @param lista - La lista con los tipos de bebida
      * @return La cadena con una líea para cada tipo de bebida recibido
      */
-    private String listarTiposBebida(List<VOUsuario> lista) 
+    private String listarUsuarios(List<VOUsuario> lista) 
     {
-    	String resp = "Los tipos de bebida existentes son:\n";
+    	String resp = "Los usuarios existentes son:\n";
     	int i = 1;
-        for (VOUsuario tb : lista)
+        for (VOUsuario us : lista)
         {
-        	resp += i++ + ". " + tb.toString() + "\n";
+        	resp += i++ + ". " + us.toString() + "\n";
         }
         return resp;
 	}

@@ -193,7 +193,7 @@ public class AlohAndes
 	 * @return Un arreglo con 7 números que indican el número de tuplas borradas en las tablas GUSTAN, SIRVEN, VISITAN, BEBIDA,
 	 * TIPOBEBIDA, BEBEDOR y BAR, respectivamente
 	 */
-	public long [] limpiarParranderos ()
+	public long [] limpiarAlohAndes ()
 	{
         log.info ("Limpiando la BD de AlohAndes");
         long [] borrrados = pp.limpiarAlohAndes();	
