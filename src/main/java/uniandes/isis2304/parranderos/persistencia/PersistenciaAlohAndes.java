@@ -31,6 +31,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import uniandes.isis2304.parranderos.negocio.Reserva;
 import uniandes.isis2304.parranderos.negocio.Usuario;
 
 /**
@@ -86,6 +87,8 @@ public class PersistenciaAlohAndes
 	 * Atributo para el acceso a la tabla TIPOBEBIDA de la base de datos
 	 */
 	private SQLUsuario sqlUsuario;
+
+	private SQLReserva sqlReserva;
 	
 	/* ****************************************************************
 	 * 			Métodos del MANEJADOR DE PERSISTENCIA
@@ -195,6 +198,11 @@ public class PersistenciaAlohAndes
 	public String darTablaUsuario ()
 	{
 		return tablas.get (1);
+	}
+
+	public String darTablaReserva ()
+	{
+		return tablas.get (2);
 	}
 	
 	/**
@@ -406,5 +414,79 @@ public class PersistenciaAlohAndes
 		
 	}
 	
+
+	/* ****************************************************************
+	 * 			Métodos para manejar las RESERVAS
+	 *****************************************************************/
+
+	 /**
+      * Crea y ejecuta la sentencia SQL para adicionar una RESERVA a la base de datos de AlohAndes
+      * @param pm - El manejador de persistencia
+      * @param id - El identificador de la reserva
+      * @param idcliente - El id del cliente que contrato la reserva
+      * @param precio - Valor de la reserva - NOT NULL
+      * @param fechainicio - Es la fecha cuando incia la reserva
+      * @param fechafin - Es la fecha cuando se termina la reserva
+      * @return EL número de tuplas insertadas
+      */
+
+
+	  public Reserva adicionarReserva(long idcliente, long precio, String fechainicio, String fechafin) 
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+        try
+        {
+            tx.begin();            
+            long idReserva = nextval ();
+            long tuplasInsertadas = sqlReserva.adicionarReserva(pm, idReserva, idcliente, precio, fechainicio, fechafin);
+            tx.commit();
+            
+            log.trace ("Inserción reserva: " + idReserva + ": " + tuplasInsertadas + " tuplas insertadas");
+            return new Reserva (idReserva, idcliente, precio, fechainicio, fechafin);
+        }
+        catch (Exception e)
+        {
+//        	e.printStackTrace();
+        	log.error ("Exception : " + e.getMessage() + "\n" + darDetalleException(e));
+        	return null;
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+        }
+	}
+	  public long eliminarReservaPorId (long idReserva) 
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+        try
+        {
+            tx.begin();
+            long resp = sqlReserva.eliminarReservaPorId(pm, idReserva);
+            tx.commit();
+            return resp;
+        }
+        catch (Exception e)
+        {
+//        	e.printStackTrace();
+        	log.error ("Exception : " + e.getMessage() + "\n" + darDetalleException(e));
+            return -1;
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+       
+		}
+
+	}
 
  }
